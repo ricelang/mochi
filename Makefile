@@ -11,7 +11,7 @@ BUILD_NUMBER=$(shell date "+%Y%m%d-%H%M%S")
 
 # We have build folder which is same name with target
 # http://stackoverflow.com/questions/3931741/why-does-make-think-the-target-is-up-to-date
-.PHONY: build
+.PHONY: build repl
 
 default: build
 
