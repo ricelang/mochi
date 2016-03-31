@@ -15,7 +15,7 @@ import (
 
 // Mochi version
 //	-ldflags "-X main.Version=`git describe --always --tags`"
-var Version string
+var VERSION string
 
 const (
 	Lang = "Mochi"
@@ -39,7 +39,7 @@ func args(filename string) {
 }
 
 func main() {
-	fmt.Printf("%s %s", Lang, Version)
+	fmt.Printf("\033[48;5;95;38;5;214m%s. Rev %s\033[0m\n", Lang, VERSION)
 
 	if len(os.Args) > 1 {
 		args(os.Args[1])

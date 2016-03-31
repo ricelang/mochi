@@ -2,8 +2,9 @@ UNAME := $(shell sh -c 'uname')
 VERSION := $(shell sh -c 'git describe --always --tags')
 PATH := $(subst :,/bin:,$(GOPATH))/bin:$(PATH)
 
+NAME=mochi
 MAIN=./cmd/mochi/main.go
-OUT=./build/mochi
+OUT=./build/$(NAME)
 
 BUILD_DIR="./build"
 BUILD_NUMBER=$(shell date "+%Y%m%d-%H%M%S")
@@ -12,18 +13,21 @@ BUILD_NUMBER=$(shell date "+%Y%m%d-%H%M%S")
 # http://stackoverflow.com/questions/3931741/why-does-make-think-the-target-is-up-to-date
 .PHONY: build
 
-default: prepare build
+default: build
 
 prepare:
 	go get ./...
 	mkdir -p $(BUILD_DIR)/$(BUILD_NUMBER)
 
-build:
-	go build -o $(BUILD_DIR)/$(BUILD_NUMBER) \
+build: prepare
+	go build -o $(BUILD_DIR)/$(BUILD_NUMBER)/$(NAME) \
 			-ldflags \
 				"-X main.VERSION=$(VERSION)" \
 		$(MAIN)
-	ln -sf $(BUILD_DIR)/$(BUILD_NUMBER) $(OUT)
+	ln -sf ./$(BUILD_NUMBER)/$(NAME) $(OUT)
 
 clean:
 	rm -rf build/*
+
+repl:
+	$(OUT)
