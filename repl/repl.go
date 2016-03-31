@@ -12,13 +12,17 @@ import (
 	"os"
 )
 
+const (
+	PROGRAMNAME = "<REPL>"
+)
+
 func Run() {
 	r := bufio.NewReader(os.Stdin)
 
 	for {
 		fmt.Print(">> ")
 		line, _, _ := r.ReadLine()
-		p := parser.ParseFromString("<REPL>", string(line)+"\n")
+		p := parser.ParseFromString(PROGRAMNAME, string(line)+"\n")
 		fmt.Println(p)
 
 		// a := generator.GenerateAST(p)
