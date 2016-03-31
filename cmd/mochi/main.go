@@ -13,6 +13,14 @@ import (
 	"os"
 )
 
+// Mochi version
+//	-ldflags "-X main.Version=`git describe --always --tags`"
+var Version string
+
+const (
+	Lang = "Mochi"
+)
+
 func args(filename string) {
 	b, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -31,6 +39,8 @@ func args(filename string) {
 }
 
 func main() {
+	fmt.Printf("%s %s", Lang, Version)
+
 	if len(os.Args) > 1 {
 		args(os.Args[1])
 		return
