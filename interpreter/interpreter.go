@@ -3,6 +3,7 @@ package interpreter
 import (
 	"bytes"
 	"fmt"
+	"github.com/mochi-lang/mochi/compiler"
 	"github.com/mochi-lang/mochi/generator"
 	"github.com/mochi-lang/mochi/parser"
 	"go/printer"
@@ -17,6 +18,9 @@ func Run(filename string) {
 	}
 
 	p := parser.ParseFromString(filename, string(b)+"\n")
+
+	v := compiler.Compile(p)
+	compiler.PrintOut(v)
 
 	a := generator.GenerateAST(p)
 
