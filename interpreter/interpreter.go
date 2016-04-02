@@ -20,10 +20,7 @@ func Run(filename string) {
 	p := parser.ParseFromString(filename, string(b)+"\n")
 
 	v := compiler.Compile(p)
-	vset := token.NewFileSet()
-	var vbuf bytes.Buffer
-	printer.Fprint(&vbuf, vset, v)
-	fmt.Printf("===============Vinh- compile\n%s\n end vinh=================", vbuf.String())
+	compiler.PrintOut(v)
 
 	a := generator.GenerateAST(p)
 
