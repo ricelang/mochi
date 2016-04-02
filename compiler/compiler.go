@@ -31,6 +31,9 @@ func Compile(tree []parser.Node) *ast.File {
 		imports := getImports(tree[0].(*parser.CallNode))
 
 		f.Name = name
+		//f.Comments = genComment()
+
+		//decls = append(decls, genComment())
 
 		if imports != nil {
 			decls = append(decls, importsToDecl(imports))

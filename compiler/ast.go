@@ -26,6 +26,7 @@ func isNsDecl(node parser.Node) bool {
 
 func getNamespace(node *parser.CallNode) *ast.Ident {
 	return &ast.Ident{
+
 		Name: node.Args[0].(*parser.IdentNode).Ident,
 	}
 }
@@ -39,7 +40,8 @@ func getImports(node *parser.CallNode) []ast.Spec {
 
 		specs[i] = &ast.ImportSpec{
 			Path: &ast.BasicLit{Value: a.(*parser.StringNode).Value},
-			Name: &ast.Ident{Name: a.(*parser.StringNode).Value},
+			//@TODO use Name to implement name import
+			Name: nil,
 		}
 	}
 
@@ -48,9 +50,12 @@ func getImports(node *parser.CallNode) []ast.Spec {
 
 func importsToDecl(specs []ast.Spec) ast.Decl {
 	s := ast.GenDecl{
+		Doc:   genComment(),
 		Tok:   token.IMPORT,
 		Specs: specs,
 	}
+	// https://godoc.org/go/ast#GenDecl
+	// A valid Lparen position (Lparen.Line > 0) indicates a parenthesized declaration.
 	s.Lparen = 1
 	return &s
 }
