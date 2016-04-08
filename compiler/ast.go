@@ -27,13 +27,15 @@ func isNsDecl(node parser.Node) bool {
 
 func getNamespace(node *parser.CallNode) *ast.Ident {
 	return &ast.Ident{
-
-		Name: node.Args[0].(*parser.IdentNode).Ident,
+		Name: "main",
+		// @TODO When we support build a whole dir, we will use below code
+		//Name: node.Args[0].(*parser.IdentNode).Ident,
 	}
 }
 
 func getImports(node *parser.CallNode) []ast.Spec {
 	imports := node.Args[1:]
+	imports = append(imports, &parser.StringNode{NodeType: parser.NodeString, Value: "\"github.com/mochi-lang/mochi/mochi/core\""})
 
 	specs := make([]ast.Spec, len(imports))
 	for i, a := range imports {
@@ -135,14 +137,34 @@ func nodeFnBody(nodes []parser.Node) *ast.BlockStmt {
 
 // Convert a Lisp node fn call to AST
 func nodeFnCall(node *parser.CallNode) ast.Expr {
-	fmt.Printf("nodeFnCall %+v %s", node, node.Callee.(*parser.IdentNode).Ident)
+	fmt.Printf("nodeFnCall node=%+v ident=%v args=%v", node, node.Callee.(*parser.IdentNode).Ident, node.Args)
 	stmt := &ast.CallExpr{}
 	switch node.Callee.(*parser.IdentNode).Ident {
+	case "let":
+		stmt := &ast.AssignStmt {
+			Lhs: []ast.Expr{
+				&ast.Ident {
+					Name: node.Args[0].(*parser.IdentNode).Ident,
+				},
+			}
+			Tok: token.DEFINE,
+			Rhs: []ast.Expr{
+				&ast.Ident {
+					Name: node.Args[0].(*parser.IdentNode).Ident,
+				},
+			}
+
+		}
+		return stmt
 	case "if":
 		stmt.Fun = &ast.Ident{
-			Name: helper.LispFnToGoName(node.Callee.(*parser.IdentNode).Ident),
+			Name: "core.If",
 		}
 		stmt.Args = make([]ast.Expr, len(node.Args))
+		switch len(node.Args) {
+		case 1:
+			panic("If requires >=2 arguments")
+		}
 	default:
 		stmt = &ast.CallExpr{
 			Fun: &ast.Ident{
@@ -168,6 +190,11 @@ func nodeToStmt(node parser.Node) ast.Expr {
 			Kind:  token.STRING,
 			Value: node.(*parser.StringNode).Value,
 		}
+	case parser.NodeIdent:
+		return &ast.BasicLit{
+			Kind:  token.STRING,
+			Value: node.(*parser.IdentNode).Ident,
+		}
 	}
-	return nil
+	panic(fmt.Sprintf("Unknow NodeType %v: %v", node.Type(), node))
 }
