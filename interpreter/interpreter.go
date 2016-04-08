@@ -1,13 +1,13 @@
 package interpreter
 
 import (
-	"bytes"
-	"fmt"
+	//"bytes"
+	//"fmt"
 	"github.com/mochi-lang/mochi/compiler"
-	"github.com/mochi-lang/mochi/generator"
+	//"github.com/mochi-lang/mochi/generator"
 	"github.com/mochi-lang/mochi/parser"
-	"go/printer"
-	"go/token"
+	//"go/printer"
+	//"go/token"
 	"io/ioutil"
 )
 
@@ -22,11 +22,11 @@ func Run(filename string) {
 	v := compiler.Compile(p)
 	compiler.PrintOut(v)
 
-	a := generator.GenerateAST(p)
+	//a := generator.GenerateAST(p)
 
-	fset := token.NewFileSet()
+	//fset := token.NewFileSet()
 
-	var buf bytes.Buffer
-	printer.Fprint(&buf, fset, a)
-	fmt.Printf("%s\n", buf.String())
+	//var buf bytes.Buffer
+	//printer.Fprint(&buf, fset, a)
+	//fmt.Printf("%s\n", buf.String())
 }

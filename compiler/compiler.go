@@ -40,10 +40,15 @@ func Compile(tree []parser.Node) *ast.File {
 			//f.Imports = imports
 		}
 
+		// We take out the first element since it's package define.
+		// Rest of program starts at second element
 		tree = tree[1:]
 	}
 
-	//decls = append(decls, generateDecls(tree)...)
+	// This is the whole program, or in other word, body of a Lisp program
+	decls = append(decls, genDecls(tree)...)
+
+	fmt.Printf("DECLS= %v", decls)
 
 	f.Decls = decls
 	return f

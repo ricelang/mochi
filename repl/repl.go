@@ -2,13 +2,13 @@ package repl
 
 import (
 	"bufio"
-	"bytes"
+	//"bytes"
 	"fmt"
-	"github.com/mochi-lang/mochi/generator"
+	//"github.com/mochi-lang/mochi/compiler"
 	"github.com/mochi-lang/mochi/parser"
-	"go/ast"
-	"go/printer"
-	"go/token"
+	//"go/ast"
+	//"go/printer"
+	//"go/token"
 	"os"
 )
 
@@ -26,12 +26,12 @@ func Run() {
 		fmt.Println(p)
 
 		// a := generator.GenerateAST(p)
-		a := generator.EvalExprs(p)
-		fset := token.NewFileSet()
-		ast.Print(fset, a)
+		//a := generator.EvalExprs(p)
+		//fset := token.NewFileSet()
+		//ast.Print(fset, a)
 
-		var buf bytes.Buffer
-		printer.Fprint(&buf, fset, a)
-		fmt.Printf("%s\n", buf.String())
+		//var buf bytes.Buffer
+		//printer.Fprint(&buf, fset, a)
+		//fmt.Printf("%s\n", buf.String())
 	}
 }
