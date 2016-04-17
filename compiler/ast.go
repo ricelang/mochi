@@ -103,7 +103,9 @@ func topLevelNodeToDecl(node *parser.CallNode) ast.Decl {
 			Results: nil,
 		}
 
-		decl.Body = nodeFnBody(node.Args[1:])
+		//decl.Body = nodeFnBody(node.Args[1:])
+		// TODO: Check argument lengths
+		decl.Body = nodeFnBody(node.Args[1])
 
 		return &decl
 	default:
@@ -114,22 +116,23 @@ func topLevelNodeToDecl(node *parser.CallNode) ast.Decl {
 	}
 }
 
-func nodeFnBody(nodes []parser.Node) *ast.BlockStmt {
+func nodeFnBody(node parser.Node) *ast.BlockStmt {
 	stmt := ast.BlockStmt{
-		List: make([]ast.Stmt, len(nodes)),
+		List: make([]ast.Stmt, 1),
 	}
 
-	for i, node := range nodes {
-		switch node.Type() {
-		case parser.NodeCall:
-			fmt.Printf("FnBody %+v %s", node, node.Type())
+	fmt.Println("=====\nNodeFnBody: %v=========\n", node)
 
-			exprstmt := &ast.ExprStmt{}
-			exprstmt.X = nodeFnCall(node.(*parser.CallNode))
-			stmt.List[i] = exprstmt
-		default:
-			panic(fmt.Sprintf("Doesn't support node: %v here", node))
-		}
+	switch node.Type() {
+	case parser.NodeCall:
+		fmt.Printf("FnBody %+v %s", node, node.Type())
+
+		exprstmt := &ast.ExprStmt{}
+		exprstmt.X = nodeFnCall(node.(*parser.CallNode))
+		stmt.List[0] = exprstmt
+
+	default:
+		panic(fmt.Sprintf("Doesn't support node: %v here", node))
 	}
 
 	return &stmt
@@ -141,19 +144,18 @@ func nodeFnCall(node *parser.CallNode) ast.Expr {
 	stmt := &ast.CallExpr{}
 	switch node.Callee.(*parser.IdentNode).Ident {
 	case "let":
-		stmt := &ast.AssignStmt {
+		stmt := &ast.AssignStmt{
 			Lhs: []ast.Expr{
-				&ast.Ident {
+				&ast.Ident{
 					Name: node.Args[0].(*parser.IdentNode).Ident,
 				},
-			}
+			},
 			Tok: token.DEFINE,
 			Rhs: []ast.Expr{
-				&ast.Ident {
+				&ast.Ident{
 					Name: node.Args[0].(*parser.IdentNode).Ident,
 				},
-			}
-
+			},
 		}
 		return stmt
 	case "if":
